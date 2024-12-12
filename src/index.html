@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Novacal</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <script src="https://cdn.plot.ly/plotly-2.27.1.min.js"></script>
+</head>
+<body>
+    <!-- Title bar -->
+    <div class="title-bar">
+        <div class="title-container">
+            <img src="../assets/icon.ico" alt="Novacal Logo" class="title-icon">
+            <div class="title">Novacal</div>
+        </div>
+        <div class="window-controls">
+            <button id="minimizeBtn" class="control-button" title="Minimize">-</button>
+            <button id="maximizeBtn" class="control-button" title="Maximize">□</button>
+            <button id="closeBtn" class="control-button" title="Close">×</button>
+        </div>
+    </div>
+
+    <!-- Main toolbar -->
+    <div class="toolbar">
+        <div class="toolbar-group">
+            <button id="plotBtn" class="toolbar-button" title="Plot selected data">
+                <img src="../assets/plot.svg" alt="Plot">
+                <span>Plot</span>
+            </button>
+            <button id="clearBtn" class="toolbar-button" title="Clear all plots">
+                <img src="../assets/clear.svg" alt="Clear">
+                <span>Clear</span>
+            </button>
+            <button id="calibrateBtn" class="toolbar-button" title="Run calibration">
+                <img src="../assets/calibration.svg" alt="Calibrate">
+                <span>Calibrate</span>
+            </button>
+            <button id="firBtn" class="toolbar-button" title="Generate FIR filter">
+                <img src="../assets/fir.svg" alt="FIR">
+                <span>FIR</span>
+            </button>
+            <button id="fftBtn" class="toolbar-button" title="Compute FFT">
+                <img src="../assets/fft.svg" alt="FFT">
+                <span>FFT</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main content area -->
+    <div class="main-container">
+        <!-- File explorer section -->
+        <div class="file-explorer">
+            <div class="explorer-header">
+                <button class="nav-button back" title="Back">←</button>
+                <button class="nav-button clear-selection" title="Clear Selection">×</button>
+                <button id="selectFolderBtn" class="nav-button" title="Select Folder">
+                    <img src="../assets/folder.svg" alt="Folder">
+                </button>
+                <div class="path-display"></div>
+            </div>
+            <div class="file-list"></div>
+        </div>
+
+        <!-- Resizer for file explorer -->
+        <div class="resizer" id="dragMe"></div>
+
+        <!-- Plot area -->
+        <div class="plot-area">
+            <div class="plot-header">Plot View</div>
+            <div id="plotContainer"></div>
+            <div id="fftProgress" class="progress-bar-container" style="display: none;">
+                <div class="progress-bar"></div>
+                <div class="progress-text">Computing FFT...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calibration Dialog -->
+    <dialog id="calibrationDialog" class="modal">
+        <div class="title-bar">
+            <div class="title">Calibration</div>
+            <div class="window-controls">
+                <button class="control-button close" title="Close">×</button>
+            </div>
+        </div>
+        <div class="modal-content">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Station</th>
+                        <th>Waveform</th>
+                        <th>Frequency (Hz)</th>
+                        <th>Tx</th>
+                        <th>Rx</th>
+                        <th>Coil</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <div class="button-row">
+                <button id="importFromConfigBtn">IMPORT FROM CONFIG</button>
+                <button id="runCalibrationBtn">RUN CALIBRATION</button>
+                <button id="exportResultsBtn" disabled>EXPORT RESULTS</button>
+            </div>
+            <div class="progress-bar-container" style="display: none;">
+                <div class="progress-bar"></div>
+                <div class="progress-text">0%</div>
+            </div>
+        </div>
+        <div class="resize-handle"></div>
+    </dialog>
+
+    <!-- FIR Dialog -->
+    <dialog id="firDialog" class="modal">
+        <div class="title-bar">
+            <div class="title">FIR Filter Generation</div>
+            <div class="window-controls">
+                <button class="control-button close" title="Close">×</button>
+            </div>
+        </div>
+        <div class="modal-content">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Coil Name</th>
+                        <th>Sample Rate (Hz)</th>
+                        <th>Base Frequency (Hz)</th>
+                        <th>Stabilization</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" class="coil-name" placeholder="Enter coil name"></td>
+                        <td><input type="number" class="sample-rate" value="51200"></td>
+                        <td><input type="number" class="base-freq" step="0.1"></td>
+                        <td><input type="number" class="stabilization" step="0.01" value="0.01"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="button-row">
+                <button id="generateFIRBtn">Generate FIR Filter</button>
+                <button id="exportFIRBtn" disabled>Export Results</button>
+            </div>
+            <div class="progress-bar-container" style="display: none;">
+                <div class="progress-bar"></div>
+                <div class="progress-text">Processing...</div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Application Scripts -->
+    <script src="js/renderer.js" type="module"></script>
+</body>
+</html>
